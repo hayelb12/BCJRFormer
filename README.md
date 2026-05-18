@@ -18,7 +18,7 @@ Both BCJR and Believe Propagation are implemented with [numba](https://github.co
 **Disclaimer:** This codebase was somewhat hastily refactored - Some variable names might still be misleading (especially in the context of the thesis).
 
 # Setup
-To install the project, you need to have [Poetry](https://python-poetry.org/) installed. At least Python 3.11 is required. Once you have Poetry, you can install all the dependencies by running the following command:
+To install the project, you need to have [Poetry](https://python-poetry.org/) installed. At least Python 3.12 is required. Once you have Poetry, you can install all the dependencies by running the following command:
 
 ```sh
 poetry install
@@ -52,6 +52,10 @@ poetry run python eval.py -c evaluate_config.yaml code_config.yaml
 
 ### Optional: Weights & Biases (wandb) Logging
 We track experiments using Weights & Biases (wandb). Wandb support can be enabled via the configuration file.
+
+### Known (benign) warnings
+- Spock prints `SyntaxWarning: Overriding an already set parameter ...` when a key is set in a config file and also overridden on the command line. This is expected and harmless - the CLI value wins.
+- On macOS, `poetry install` prints a block about wheels skipped for the `torch-cu118` source ("environment does not support the identified abi tags"). This is expected: the CUDA wheels only exist for Linux/Windows, and Poetry correctly falls back to the plain CPU/MPS `torch` build on macOS (`torch.version.cuda` is `None`). On Linux/Windows the `+cu118` CUDA build is installed instead.
 
 # Project Structure
 
