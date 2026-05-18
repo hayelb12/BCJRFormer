@@ -4,13 +4,11 @@
 
 specific_model: "ConvBCJRFormerModel"
 
-inner_code_config: ConvolutionalCodeConfig
-
 epochs: 400
 workers: 0
 
 masked_attention: true
-gpu: 3
+gpu: 0
 dropout: 0.0
 batch_size: 256
 batch_accumulation: 1
@@ -34,7 +32,7 @@ N_dec: 6
 d_model: 96
 h: 8
 
-log_wandb: true
+log_wandb: false
 
 save_checkpoints_every_n_epochs: 100
 IDSChannelConfig:

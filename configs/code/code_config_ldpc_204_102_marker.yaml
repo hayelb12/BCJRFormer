@@ -1,17 +1,17 @@
-code_type: LDPC
-code_n: 204
-code_k: 102
-standardize: True
-file_extension: '.alist'
+# Concatenated scheme: LDPC(204,102) outer code + marker inner code.
+# Pair with a model config, e.g.:
+#   poetry run python main.py -c configs/model/bcjrformer_config.yaml configs/code/code_config_ldpc_204_102_marker.yaml
+
 inner_code_config: MarkerCodeConfig
+
+LinearCodeConfig:
+  code_type: LDPC
+  n: 204
+  k: 102
+  q: 2
+  file_extension: .alist
 
 MarkerCodeConfig:
   marker: [0, 0, 1]
   N_c: 7
   p: 1
-
-ConvolutionalCodeConfig:
-  k: 1
-  g: [5, 7]
-  p: 1
-  random_offset: False

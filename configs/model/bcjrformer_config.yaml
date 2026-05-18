@@ -1,12 +1,10 @@
 specific_model: "BCJRFormerModel"
 
-inner_code_config: MarkerCodeConfig
-
 epochs: 2
 workers: 0
 
 masked_attention: true
-gpu: 3
+gpu: 0
 dropout: 0.0
 batch_size: 2
 batch_accumulation: 1
@@ -28,7 +26,7 @@ N_dec: 1
 d_model: 16
 h: 2
 
-log_wandb: true
+log_wandb: false
 
 save_checkpoints_every_n_epochs: 100
 IDSChannelConfig:

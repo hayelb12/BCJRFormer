@@ -1,13 +1,14 @@
-code_type: LDPC
-code_n: 96
-code_k: 48
-standardize: True
+# Concatenated scheme: LDPC(96,48) outer code + convolutional inner code.
+# Pair with a model config, e.g.:
+#   poetry run python main.py -c configs/model/convbcjrformer_config.yaml configs/code/code_config_ldpc_96_48_conv.yaml
 inner_code_config: ConvolutionalCodeConfig
 
-MarkerCodeConfig:
-  marker: [1, 1, 0]
-  N_c: 3
-  p: 1
+LinearCodeConfig:
+  code_type: LDPC
+  n: 96
+  k: 48
+  q: 2
+  file_extension: .txt
 
 ConvolutionalCodeConfig:
   k: 1

@@ -1,3 +1,4 @@
+inner_code_config: MarkerCodeConfig
 
 LinearCodeConfig:
   code_type: HAMMING
@@ -9,9 +10,3 @@ MarkerCodeConfig:
   marker: [0, 1]
   N_c: 3
   p: 1
-
-ConvolutionalCodeConfig:
-  k: 1
-  g: [5, 7]
-  p: 1
-  random_offset: False
