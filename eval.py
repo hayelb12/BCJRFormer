@@ -15,6 +15,7 @@ from bcjrformer.configs.code_config import (
     InnerCodeConfig,
     LinearCodeConfig,
     MarkerCodeConfig,
+    validate_model_code_compatibility,
 )
 from bcjrformer.configs.evaluation_config import EvaluationConfig
 from bcjrformer.configs.inner_model_config import InnerModelConfig
@@ -127,6 +128,11 @@ def parse_args() -> tuple[
 def main():
     # Parse the evaluation configuration along with the code config
     eval_config, code_config, channel_config = parse_args()
+
+    validate_model_code_compatibility(
+        cast(SpecificModelConfig, eval_config.specific_model),
+        code_config.inner_code_config,
+    )
 
     # Use the provided seed (or default to 42) for reproducibility.
 

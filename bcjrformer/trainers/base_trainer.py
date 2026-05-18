@@ -172,6 +172,7 @@ class BaseTrainer[T]:
         torch.save(
             {
                 "epoch": epoch,
+                "config": self.model_config,
                 "model_state_dict": self.model.state_dict(),
                 "optimizer_state_dict": optimizer.state_dict(),
                 "scheduler_state_dict": scheduler.state_dict(),
