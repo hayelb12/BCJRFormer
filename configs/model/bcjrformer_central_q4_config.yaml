@@ -1,6 +1,6 @@
 # Central comparison: BCJRFormer vs BCJR, single-message quaternary LDPC(64,32).
 # Paper-scale hyperparameters, mapped to the refactored schema from wandb run
-# tum-ecct/ECCT_INNER/4yvvzk7g (thesis_quarternary). NOT bit-faithful to the
+# tum-ecct/ECCT_INNER/4yvvzk7g (thesis_quaternary). NOT bit-faithful to the
 # thesis (refactor dropped standardize/learnt_del_prob; attention_mask_type
 # "no_mask" -> masked_attention false). Pair with the q4 DNA code config:
 #   poetry run python main.py -c configs/model/bcjrformer_central_q4_config.yaml configs/code/code_config_ldpc_64_32_dna.yaml
