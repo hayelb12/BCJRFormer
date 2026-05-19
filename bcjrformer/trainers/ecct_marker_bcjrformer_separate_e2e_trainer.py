@@ -39,6 +39,9 @@ class ECCTMarkerBCJRFormerSeparateE2ETrainer(BaseTrainer[BCJRFormerMarkerDataset
         logger: logging.Logger | None = None,
     ) -> None:
 
+        self.device = device
+        self.logger = setup_logger(__name__, logger)
+
         self.inner_pre_trained_model_path = (
             ecct_on_bcjrformer_e2e_config.inner_pre_trained_model_path
         )

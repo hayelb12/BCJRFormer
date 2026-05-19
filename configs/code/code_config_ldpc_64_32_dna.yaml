@@ -1,19 +1,22 @@
-code_type: LDPC
-code_n: 64
-code_k: 32
-code_q: 4
-standardize: True
+# Concatenated scheme: LDPC(64,32) over GF(4) outer code + marker inner code.
+# Pair with a model config, e.g.:
+#   poetry run python main.py -c configs/model/bcjrformer_config.yaml configs/code/code_config_ldpc_64_32_dna.yaml
+#
+# Spock note: code parameters live in per-class namespace blocks (not bare
+# top-level keys) because `k`/`p` are shared across the code configs and would
+# otherwise be ambiguous to Spock.
+
 inner_code_config: MarkerCodeConfig
-custom_file_name: "LDPC_N64_K32_QC_NB_FIXED_WEIGHTS.alist"
-file_extension: ".alist"
+
+LinearCodeConfig:
+  code_type: LDPC
+  n: 64
+  k: 32
+  q: 4
+  custom_file_name: LDPC_N64_K32_QC_NB_FIXED_WEIGHTS.alist
+  file_extension: .alist
 
 MarkerCodeConfig:
   marker: [3, 2]
   N_c: 6
   p: 2 # corresponds to q = 4
-
-ConvolutionalCodeConfig:
-  k: 1
-  g: [5, 7, 10, 14] # corresponds to 0101, 0111, 1010, 1110
-  p: 2
-  random_offset: False

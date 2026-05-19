@@ -21,6 +21,7 @@ from bcjrformer.configs.code_config import (
     InnerCodeConfig,
     LinearCodeConfig,
     MarkerCodeConfig,
+    validate_model_code_compatibility,
 )
 from bcjrformer.configs.inner_model_config import InnerModelConfig
 from bcjrformer.configs.model_config import ModelConfig
@@ -200,6 +201,11 @@ def initialize_model_path(
 
 def main():
     model_config, code_config, channel_config = parse_args()
+
+    validate_model_code_compatibility(
+        cast(SpecificModelConfig, model_config.specific_model),
+        code_config.inner_code_config,
+    )
 
     set_seed(model_config.seed)
     ####################################################################

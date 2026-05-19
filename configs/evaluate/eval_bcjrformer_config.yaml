@@ -1,13 +1,15 @@
-model_path: Results_BCJRFORMER/11022025_155134_BCJRFORMER_channel_pi_0.0_pd_0.05_ps_0.0_LDPC_n_96_k_48_CONV_k_1_g_[5, 7]_p_1/best_model.pth
+# Path to a trained checkpoint (written by main.py under Results_BCJRFORMER/<run>/).
+# Set this to your run, or override per invocation with
+#   --EvaluationConfig.model_path <path/to/best_model.pth>
+# The architecture below (d_model, N_dec, h) must match the trained checkpoint.
+model_path: Results_BCJRFORMER/<run>/best_model.pth
 
 specific_model: "BCJRFormerModel"
-
-inner_code_config: MarkerCodeConfig
 
 workers: 0
 
 masked_attention: true
-gpu: 3
+gpu: 0
 
 compile_model: false
 
@@ -20,7 +22,7 @@ N_dec: 1
 d_model: 16
 h: 2
 
-log_wandb: true
+log_wandb: false
 
 IDSChannelConfig:
   p_d: 0.05

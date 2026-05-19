@@ -6,13 +6,18 @@ authors = ["Julian Streit <julian.streit@tum.de>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-torch = "^2.4.0+cu118"
+python = "^3.12"
+torch = [
+    { version = "2.4.0+cu118", source = "torch-cu118", platform = "linux" },
+    { version = "2.4.0+cu118", source = "torch-cu118", platform = "windows" },
+    { version = "2.4.0", platform = "darwin" },
+]
 wandb = ">=0.17.5"
 spock-config = "^3.1.0"
 numpy = "^2.0"
 numba = "^0.61.0"
 galois = "^0.4.2"
+scipy = "^1.13"
 matplotlib = "^3.9.2"
 typer = "^0.13.0"
 tqdm = "^4.67.1"
@@ -35,6 +40,6 @@ build-backend = "poetry.core.masonry.api"
 
 
 [[tool.poetry.source]]
-name = "torch-stable"
-url = "https://download.pytorch.org/whl/"
+name = "torch-cu118"
+url = "https://download.pytorch.org/whl/cu118"
 priority = "supplemental"
