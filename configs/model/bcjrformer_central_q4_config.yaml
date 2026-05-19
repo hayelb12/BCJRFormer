@@ -1,0 +1,44 @@
+# Central comparison: BCJRFormer vs BCJR, single-message quaternary LDPC(64,32).
+# Paper-scale hyperparameters, mapped to the refactored schema from wandb run
+# tum-ecct/ECCT_INNER/4yvvzk7g (thesis_quarternary). NOT bit-faithful to the
+# thesis (refactor dropped standardize/learnt_del_prob; attention_mask_type
+# "no_mask" -> masked_attention false). Pair with the q4 DNA code config:
+#   poetry run python main.py -c configs/model/bcjrformer_central_q4_config.yaml configs/code/code_config_ldpc_64_32_dna.yaml
+# This run = p_i=p_d=0.05, p_s=0.012; thesis logged BER ~0.175 vs BCJR 1.0.
+# Sweep the curve with --IDSChannelConfig.p_i X --IDSChannelConfig.p_d X.
+
+specific_model: "BCJRFormerModel"
+
+epochs: 400
+batches_per_epoch: 400
+batch_size: 256
+batch_accumulation: 1
+warmup_epochs: 100
+lr: 0.00025
+scheduler_type: 'cosine'
+dropout: 0.0
+
+d_model: 96
+N_dec: 6
+h: 8
+masked_attention: false
+
+seed: 42
+test_batch_size: 256
+test_batches_per_epoch: 1600
+save_checkpoints_every_n_epochs: 100
+
+gpu: 0
+workers: 8
+compile_model: false
+log_wandb: false
+
+IDSChannelConfig:
+  p_i: 0.05
+  p_d: 0.05
+  p_s: 0.012
+
+InnerModelConfig:
+  n_sequence_min: 1
+  n_sequence_max: 1
+  delta_std_multiplier: 3.5
