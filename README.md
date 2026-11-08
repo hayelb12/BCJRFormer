@@ -44,6 +44,65 @@ poetry run python main.py -c model_config.yaml code_config.yaml --ModelConfig.fo
 ```  
 to load model and code config, then you can overwrite key-value pairs (in this case the model_config's key `foo` with value `bar`).
 
+### Extracting attention traces for verification
+For a trained BCJRFormer checkpoint, capture each decoder layer's Q/K/V
+projection weights, biases, normalized projection inputs, and per-head
+projection outputs alongside the model input and output:
+```sh
+poetry run python extract_attention_trace.py \
+  --checkpoint path/to/best_model.pth \
+  --model-config configs/model/joint_bcjrformer_config.yaml \
+  --code-config configs/code/code_config_ldpc_96_48_marker.yaml \
+  --output-dir path/to/attention_fev \
+  --samples 10
+```
+The output directory contains `attention_trace.npz` and `manifest.json`. For
+each head, the manifest maps the arrays for its weights, bias, and observed
+output to the shared layer projection input. The projection is
+`output = input @ weight.T + bias`; weights use PyTorch's
+`[out_features, in_features]` layout. The script uses the training config
+stored in the checkpoint and a deterministic sample generated from the
+selected code config. The capture also writes `noisy_reads.csv`, which lists
+the raw received 0/1 reads before trellis conversion alongside the transmitted
+inner-code bits, outer codeword, and message bits. Read lengths exclude
+padding. Only load checkpoints from trusted training runs.
+
+To view a captured trace as layer-by-layer heatmaps with exact CSV downloads,
+generate and open the local HTML report:
+```sh
+poetry run python make_attention_report.py \
+  --trace-dir path/to/attention_fev \
+  --example 0
+```
+The report is written to `path/to/attention_fev/human_readable/index.html`.
+It displays input vectors, Q/K/V weight matrices, and projected outputs for
+the selected example. Its CSV links contain exact weights and all captured
+sample outputs; it also links the raw `noisy_reads.csv` from the capture.
+
+For a reproducible hardware handoff, export noisy reads first, model
+parameters second, and model outputs third. A fourth CSV contains the
+windowed tensors and padding masks actually consumed by the network:
+```sh
+poetry run python export_hardware_csv.py \
+  --checkpoint path/to/best_model.pth \
+  --trace-dir path/to/attention_fev \
+  --output-dir path/to/hardware_bundle \
+  --model-config configs/model/joint_bcjrformer_config.yaml \
+  --code-config configs/code/code_config_ldpc_96_48_marker.yaml
+```
+This creates a matching `hardware_bundle.zip` with the checkpoint, trace,
+config files, exporter scripts, CSVs, and a hash-based `bundle_manifest.json`.
+The exporter reads the noisy reads, model inputs/masks, targets, and outputs
+from the same trace file and checks the trace's Q/K/V weights against the
+selected checkpoint.
+The parameter CSV contains every checkpoint parameter as one row per scalar.
+For decoder Q/K/V parameters, `attention_layer`, `projection`, and
+`head_index` identify which attention head owns the output channel; rows use
+PyTorch's row-major linear-weight layout. The output CSV contains each logit,
+its sigmoid probability, predicted bit, target bit, and correctness flag. The
+fourth CSV flattens `model_input` exactly as `BCJRFormer.forward` does and
+includes the corresponding padding-mask bit.
+
 ### Evaluation
 Write/Use an evaluate config and use the script `evaluate.py`, e. g.:
 ```sh
@@ -90,7 +149,3 @@ We track experiments using Weights & Biases (wandb). Wandb support can be enable
 ├── eval.py                               :   Evaluation only of trained models   
 └── <b>main.py/</b>                            :   <b>Main Training Script</b>
 </pre>
-
-
-
-

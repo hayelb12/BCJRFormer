@@ -99,6 +99,12 @@ class BCJRFormerMarkerDataset(data.Dataset):
         return int(self.batches_per_epoch * self.batch_size)
 
     def __getitem__(self, index):
+        return self._get_item(index, include_raw_reads=False)
+
+    def get_item_with_raw_reads(self, index):
+        return self._get_item(index, include_raw_reads=True)
+
+    def _get_item(self, index, include_raw_reads: bool):
 
         # return 1
 
@@ -119,6 +125,8 @@ class BCJRFormerMarkerDataset(data.Dataset):
         )
 
         r, N = self.channel.numba_transmit(x_inner, M)
+        raw_reads = r.copy()
+        raw_read_lengths = N.copy()
 
         r, N = self.trellis.resize_received_sequence(r, N)
 
@@ -158,7 +166,7 @@ class BCJRFormerMarkerDataset(data.Dataset):
 
         padding_mask = y[:, :, 0, 0] == self.padding_value
 
-        return (
+        sample = (
             torch.from_numpy(m).float(),
             torch.from_numpy(x.squeeze()).float(),
             torch.tensor(x_inner).float(),
@@ -166,6 +174,13 @@ class BCJRFormerMarkerDataset(data.Dataset):
             torch.tensor(y).float(),
             torch.tensor(padding_mask),
         )
+        if include_raw_reads:
+            return (
+                *sample,
+                torch.from_numpy(raw_reads.astype(np.int64)),
+                torch.from_numpy(raw_read_lengths.astype(np.int64)),
+            )
+        return sample
 
 
 class BCJRFormerConvDataset(data.Dataset):
